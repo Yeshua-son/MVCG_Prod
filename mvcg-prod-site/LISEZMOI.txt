@@ -1,0 +1,9 @@
+MVCG Prod - site (version finale)
+
+index.html est autonome : styles, scripts, polices ET images sont intégrés dans le fichier.
+Il s'ouvre et se déploie seul. Le dossier images/ contient les originaux, pour les remplacer ou les réutiliser.
+
+Déploiement : copier index.html à la racine du site (Cloudflare Pages/Workers, Netlify, hébergement classique...).
+
+Ajouter un projet : dans la section Projets, dupliquer un bloc <figure class="card"> et changer l'image, l'étiquette et le titre.
+Horaires : bloc <dl class="hours"> du pied de page et script « Horaires du studio ».

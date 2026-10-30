@@ -85,7 +85,7 @@
   --poster: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif; /* affiche : accueil, ruban, MVCG */
   --track-display: -.06em;    /* proche du site d'origine (-.078em) ; l'espace entre les mots est rouvert pour rester lisible */
   --word-display: .12em;
-  --fs-hero: clamp(3.6rem, 8.4vw, 9.4rem);
+  --fs-hero: clamp(4.5rem, 9.1vw, 10.7rem);
   --fs-h2: clamp(2.9rem, 7.4vw, 7.6rem);
   --fs-h3: clamp(1.7rem, 2.6vw, 2.6rem);
   --fs-body: clamp(1rem, .96rem + .2vw, 1.125rem);
@@ -246,13 +246,13 @@ em { font-style: italic; letter-spacing: -.025em; }
 .hero-inner { padding-top: calc(var(--header-h) + 64px); }
 .kicker { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; margin-bottom: clamp(22px, 3vw, 40px); color: var(--paper); }
 .kicker i { width: 9px; height: 9px; background: var(--signal); display: block; }
-.hero h1 { font-size: var(--fs-hero); line-height: .9; letter-spacing: var(--track-display); word-spacing: var(--word-display); }
+.hero h1 { font-size: var(--fs-hero); line-height: .73; letter-spacing: -.078em; word-spacing: 0; }
 .hero h1 .ln { width: fit-content; position: relative; z-index: 2; overflow: visible; white-space: nowrap; }
 /* « vie » : très grand, posé derrière le personnage ; le script ajuste son retrait pour qu'il touche l'homme */
-.hero h1 .vie { z-index: 0; padding-left: 2.6em; margin-block: -.3em -.3em; }
-.hero h1 .vie > span { font-family: var(--serif); font-weight: 400; font-style: italic; text-transform: none; color: var(--signal); font-size: 2.75em; line-height: .8; letter-spacing: -.035em; animation: vieGlow 7s ease-in-out infinite; }
+.hero h1 .vie { z-index: 3; padding-left: 16.5vw; margin-block: .05em .08em; }
+.hero h1 .vie > span { font-family: var(--serif); font-weight: 400; font-style: italic; text-transform: none; color: var(--signal); font-size: 1.43em; line-height: .63; letter-spacing: -.105em; padding-right: .04em; animation: vieGlow 7s ease-in-out infinite; }
 @keyframes vieGlow { 50% { text-shadow: 0 0 .32em rgba(243, 204, 36, .45); } }
-.hero h1 .l3 { padding-left: .5em; }
+.hero h1 .l3 { padding-left: 8.5vw; }
 .hero h1 .beam { background: linear-gradient(90deg, var(--signal), var(--signal)) 0 96% / 0% .065em no-repeat; transition: background-size 1.2s var(--ease) 1.5s; }
 .ready .hero h1 .beam { background-size: 100% .065em; }
 /* Le titre est dévoilé de gauche à droite par une lame de lumière */
@@ -491,9 +491,10 @@ a.card-in:hover .go svg { transform: translate(3px, -3px); }
   .hero-glow { background: radial-gradient(ellipse 60% 40% at 40% 12%, rgba(243, 204, 36, .3), transparent 70%); }
   .papers i:nth-child(n+5) { display: none; }
   .hero-inner { padding-top: 38vh; }
-  .hero h1 { font-size: clamp(3.2rem, 15.4vw, 6.4rem); }
-  .hero h1 .vie { padding-left: .5em; margin-block: -.28em -.26em; }
-  .hero h1 .l3 { padding-left: 0; }
+  .hero h1 { font-size: clamp(4.25rem, 18.5vw, 7rem); }
+  .hero h1 .vie { padding-left: 22vw; margin-block: 0; }
+  .hero h1 .vie > span { font-size: 1.38em; }
+  .hero h1 .l3 { padding-left: 4vw; }
   .hero-row { grid-template-columns: 1fr; margin-left: 0; }
   .hero-foot { grid-template-columns: 1fr auto; margin-top: 32px; }
   .hero-foot p:last-child { display: none; }
@@ -1147,26 +1148,6 @@ a.card-in:hover .go svg { transform: translate(3px, -3px); }
     var f = 1 / items.length; bar.style.setProperty("--p", (f + p * (1 - f)).toFixed(3));
   }
   if (grid) grid.addEventListener("scroll", function () { window.requestAnimationFrame(updateCarousel); }, { passive: true });
-
-  /* Accueil : « vie » vient se glisser derrière le personnage, quelle que soit la largeur d'écran.
-     Repère : dans hero.jpg (2000 × 857), le bord gauche de l'homme est à x = 1345. */
-  var vieLn = $(".hero h1 .vie"), heroCamEl = $(".hero-media .hero-cam");
-  function placeVie() {
-    if (!vieLn || !heroCamEl) return;
-    var word = vieLn.firstElementChild, cs = getComputedStyle(heroEl);
-    var px = parseFloat(cs.getPropertyValue("--hero-x")) || 0.72;
-    var cw = heroCamEl.offsetWidth, ch = heroCamEl.offsetHeight, cl = heroCamEl.offsetLeft;
-    var sc = Math.max(cw / 2000, ch / 857), offX = (2000 * sc - cw) * px;
-    var manX = cl + 1345 * sc - offX;
-    var h1Left = vieLn.parentNode.getBoundingClientRect().left - heroEl.getBoundingClientRect().left;
-    var w = word.getBoundingClientRect().width, fs = parseFloat(getComputedStyle(vieLn).fontSize);
-    var overlap = w * (window.innerWidth <= 960 ? 0.26 : 0.15);
-    var pad = Math.max(fs * 0.3, Math.min(manX + overlap - w - h1Left, fs * 7));
-    vieLn.style.paddingLeft = pad.toFixed(1) + "px";
-  }
-  placeVie();
-  window.addEventListener("resize", placeVie);
-  if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(placeVie);
 
   /* Accueil : parallaxe au pointeur, pause des animations hors écran */
   if (heroEl && "IntersectionObserver" in window) new IntersectionObserver(function (e) { heroEl.classList.toggle("is-off", !e[0].isIntersecting); }).observe(heroEl);
